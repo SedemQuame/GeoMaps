@@ -1,14 +1,130 @@
 package com.visionarytech.maps;
 
 import androidx.appcompat.app.AppCompatActivity;
+        import androidx.core.app.ActivityCompat;
+        import androidx.core.content.ContextCompat;
 
-import android.os.Bundle;
+        import android.Manifest;
+        import android.content.pm.PackageManager;
+        import android.os.Bundle;
+        import android.webkit.GeolocationPermissions;
+        import android.webkit.WebChromeClient;
+        import android.webkit.WebSettings;
+        import android.webkit.WebView;
+        import android.webkit.WebViewClient;
+        import android.widget.Toast;
 
 public class WMS extends AppCompatActivity {
+
+    /**
+     * WebViewClient subclass loads all hyperlinks in the existing WebView
+     */
+    public class GeoWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            // When user clicks a hyperlink, load in the existing WebView
+            view.loadUrl(url);
+            return true;
+        }
+    }
+
+    /**
+     * WebChromeClient subclass handles UI-related calls
+     * Note: think chrome as in decoration, not the Chrome browser
+     */
+    public class GeoWebChromeClient extends WebChromeClient {
+        @Override
+        public void onGeolocationPermissionsShowPrompt(String origin,
+                                                       GeolocationPermissions.Callback callback) {
+            // Always grant permission since the app itself requires location
+            // permission and the user has therefore already granted it
+            callback.invoke(origin, true, false);
+        }
+    }
+
+    WebView myWebView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wms);
+
+
+
+        myWebView = findViewById(R.id.webView);
+
+
+        if (ContextCompat.checkSelfPermission(WMS.this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(WMS.this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(WMS.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            } else {
+                ActivityCompat.requestPermissions(WMS.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+        }
+
+        if (ContextCompat.checkSelfPermission(WMS.this,
+                Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(WMS.this,
+                    Manifest.permission.INTERNET)) {
+                ActivityCompat.requestPermissions(WMS.this,
+                        new String[]{Manifest.permission.INTERNET}, 1);
+            } else {
+                ActivityCompat.requestPermissions(WMS.this,
+                        new String[]{Manifest.permission.INTERNET}, 1);
+            }
+        }
+
+
+        // Brower niceties -- pinch / zoom, follow links in place
+        myWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        myWebView.getSettings().setBuiltInZoomControls(true);
+        myWebView.setWebViewClient(new WMS.GeoWebViewClient());
+
+        // Below required for geolocation
+        myWebView.getSettings().setJavaScriptEnabled(true);
+        myWebView.getSettings().setGeolocationEnabled(true);
+        myWebView.setWebChromeClient(new WMS.GeoWebChromeClient());
+
+
+        WebSettings webSettings = myWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+
+
+        myWebView.loadUrl("http://eeb34a93.ngrok.io/geoserver/www/map.html");
+
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(WMS.this,
+                            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Pop the browser back stack or exit the activity
+        if (myWebView.canGoBack()) {
+            myWebView.goBack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

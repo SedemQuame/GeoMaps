@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setJavaScriptEnabled(true);
 
 
-        myWebView.loadUrl("https://f6a3a908.ngrok.io/geoserver/www/map_online.html");
+        myWebView.loadUrl("http://eeb34a93.ngrok.io/geoserver/www/map.html");
 
 
     }
