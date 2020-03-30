@@ -1,0 +1,15 @@
+<VRTDataset rasterXSize="349" rasterYSize="500">
+<GeoTransform>-3.35, 0.01322827, 0, 11.26667, 0, -0.01323333</GeoTransform>
+<SRS>+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0</SRS>
+	<VRTRasterBand dataType="Int16" band="1" subClass="VRTRawRasterBand">
+		<Description>gha_pop</Description>
+		<SourceFilename relativetoVRT="1">gha_pop.gri</SourceFilename>
+		<ImageOffset>0</ImageOffset>
+		<PixelOffset>2</PixelOffset>
+		<LineOffset>698</LineOffset>
+		<ByteOrder>LSB</ByteOrder>
+		<NoDataValue>-9999</NoDataValue>
+		<Offset>0</Offset>
+		<Scale>1</Scale>
+	</VRTRasterBand>
+</VRTDataset>

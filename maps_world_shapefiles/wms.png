@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE ServiceExceptionReport SYSTEM "http://localhost:8081/geoserver/schemas/wms/1.1.1/WMS_exception_1_1_1.dtd"> <ServiceExceptionReport version="1.1.1" >   <ServiceException code="internalError">
+      Rendering process failed
+java.io.IOExceptionorg.postgresql.util.PSQLException: ERROR: function st_force_2d(geometry) does not exist
+  Hint: No function matches the given name and argument types. You might need to add explicit type casts.
+  Position: 45
+ERROR: function st_force_2d(geometry) does not exist
+  Hint: No function matches the given name and argument types. You might need to add explicit type casts.
+  Position: 45
+</ServiceException></ServiceExceptionReport>
